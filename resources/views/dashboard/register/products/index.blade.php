@@ -1,3 +1,3 @@
 <x-app-layout>
-    Dashboard
+    Index Product
 </x-app-layout>

@@ -7,15 +7,11 @@
 
         <title>{{ env('APP_NAME') }}</title>
 
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
+        {{-- @vite(['resources/css/app.css', 'resources/js/app.js']) --}}
     </head>
 
     <body>
-        <div class="w-full dark:bg-neutral-900 lg:ps-64">
-            <div class="space-y-4 p-4 sm:space-y-6 sm:p-6">
-                {{ $slot }}
-            </div>
-        </div>
+        {{$slot}}
     </body>
 
 </html>
