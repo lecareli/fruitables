@@ -52,3 +52,13 @@ it('can create a product with an category', function(){
     expect($product->category->name)->toBe('Vegetables');
     expect($product->name)->toBe('Brocoli');
 });
+
+it('displays the show product page', function(){
+    $category = Category::factory()->create();
+    $product = Product::factory()->create(['category_id' => $category->id]);
+
+    $response = get(route('product.show', $product->id));
+    $response->assertStatus(200);
+    $response->assertSee($product->name);
+    $response->assertSee($product->price);
+});

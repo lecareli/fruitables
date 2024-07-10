@@ -44,4 +44,16 @@ class ProductController extends Controller
             return redirect()->route()->with('error', 'Não foi possível incluir o produto.');
         }
     }
+
+    public function show(string $id)
+    {
+        try{
+            return view('dashboard.register.products.show', [
+                'product' => $this->product->with('category')->findOrFail($id),
+            ]);
+        }
+        catch(ModelNotFoundException $e){
+            return redirect()->route()->with('error', 'Não foi possível encontrar o produto.');
+        }
+    }
 }
