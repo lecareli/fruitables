@@ -5,7 +5,9 @@ use App\Models\Product;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
 
+use function Pest\Laravel\assertDatabaseHas;
 use function Pest\Laravel\get;
+use function Pest\Laravel\put;
 
 uses(RefreshDatabase::class);
 
@@ -72,4 +74,34 @@ it('displays the edit product page', function(){
     $response->assertSee($product->name);
     $response->assertSee($product->price);
     $response->assertSee($product->category->name);
+});
+
+it('updates a product and their category successfully', function(){
+    $category = Category::factory()->create();
+    $product = Product::factory()->create(['category_id' => $category->id]);
+
+    $updateCategory = [
+        'is_active' => true,
+        'name' => 'Fruits',
+    ];
+
+    $updateProduct = [
+        'is_active' => true,
+        'name' => 'Apple',
+        'price' => 2.99,
+        'description' => 'Lorem ipsum',
+        'weight' => 0.236,
+        'min_weight' => 0.100,
+        'country_origin' => 'Japan',
+        'quality' => 'Organic',
+        'check' => 'Ok',
+    ];
+
+    $data = array_merge($updateCategory, $updateProduct);
+
+    $response = put(route('product.update', $product->id), $data);
+    $response->assertRedirect(route('product.index'));
+    $response->assertSessionHas('message', 'Produto atualizado com sucesso.');
+
+    assertDatabaseHas('products', ['name' => 'Apple']);
 });
