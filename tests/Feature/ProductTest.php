@@ -62,3 +62,14 @@ it('displays the show product page', function(){
     $response->assertSee($product->name);
     $response->assertSee($product->price);
 });
+
+it('displays the edit product page', function(){
+    $category = Category::factory()->create();
+    $product = Product::factory()->create(['category_id' => $category->id]);
+
+    $response = get(route('product.edit', $product->id));
+    $response->assertStatus(200);
+    $response->assertSee($product->name);
+    $response->assertSee($product->price);
+    $response->assertSee($product->category->name);
+});

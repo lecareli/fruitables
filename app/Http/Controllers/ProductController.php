@@ -56,4 +56,16 @@ class ProductController extends Controller
             return redirect()->route()->with('error', 'Não foi possível encontrar o produto.');
         }
     }
+
+    public function edit(string $id)
+    {
+        try{
+            return view('dashboard.register.products.edit', [
+                'product' => $this->product->with('category')->findOrFail($id),
+            ]);
+        }
+        catch(ModelNotFoundException $e){
+            return redirect()->route()->with('error', 'Não foi possível encontrar o produto.');
+        }
+    }
 }
