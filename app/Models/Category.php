@@ -6,7 +6,7 @@ use App\Models\Traits\UuidTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Product extends Model
+class Category extends Model
 {
     use HasFactory, UuidTrait;
 
@@ -16,15 +16,6 @@ class Product extends Model
     protected $fillable = [
         'is_active',
         'name',
-        'price',
-        'description',
-        'image',
-        'weight',
-        'min_weight',
-        'country_origin',
-        'quality',
-        'check',
-        'category_id',
     ];
 
     /**
@@ -36,14 +27,11 @@ class Product extends Model
     {
         return [
             'is_active' => 'boolean',
-            'price' => 'double',
-            'weight' => 'double',
-            'min_weight' => 'double',
         ];
     }
 
-    public function category()
+    public function product()
     {
-        return $this->belongsTo(Category::class);
+        return $this->hasOne(Product::class);
     }
 }

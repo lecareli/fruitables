@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Category;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -10,6 +11,7 @@ return new class extends Migration
     {
         Schema::create('products', function (Blueprint $table) {
             $table->uuid('id')->primary();
+            $table->boolean('is_active')->default(true);
             $table->string('name');
             $table->double('price');
             $table->string('description');
@@ -19,6 +21,7 @@ return new class extends Migration
             $table->string('country_origin');
             $table->string('quality');
             $table->string('check');
+            $table->foreignIdFor(Category::class);
             $table->timestamps();
         });
     }
