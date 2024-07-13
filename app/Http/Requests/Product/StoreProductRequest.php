@@ -44,6 +44,7 @@ class StoreProductRequest extends FormRequest
                 'required',
                 'image',
                 'mimes:png,jpg,jpeg',
+                'max:2048',
             ],
 
             'weight' => [

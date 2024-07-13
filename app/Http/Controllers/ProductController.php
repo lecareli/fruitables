@@ -35,9 +35,21 @@ class ProductController extends Controller
     {
         try{
             $category = $this->category->create($storeCategoryRequest->validated());
+
+            $imageName = null;
+
+            if($storeProductRequest->hasFile('image')){
+                $image = $storeProductRequest->file('image');
+                $imageName = $image->hashName('uploads/products/'); //'hashName()', gera um nome único para o arquivo
+                $image->move(public_path('uploads/products/'), $imageName);
+            }
+
             $product = $this->product->create(
                 array_merge($storeProductRequest->validated(),
-                ['category_id' => $category->id]
+                [
+                    'category_id' => $category->id,
+                    'image' => $imageName,
+                ]
             ));
 
             return redirect()->route('product.index')->with('message', 'Produto incluído com sucesso.');

@@ -5,8 +5,12 @@ use App\Models\Product;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
 
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
+
 use function Pest\Laravel\assertDatabaseHas;
 use function Pest\Laravel\get;
+use function Pest\Laravel\post;
 use function Pest\Laravel\put;
 
 uses(RefreshDatabase::class);
@@ -25,34 +29,43 @@ it('displays the product create page', function(){
 });
 
 it('can create a product with an category', function(){
-    $category = [
+
+    $categoryData = [
         'id' => (string) Str::uuid(),
         'is_active' => true,
         'name' => 'Vegetables',
     ];
 
-    $product = [
+    $category = Category::create($categoryData);
+
+    $image = UploadedFile::fake()->image('brocoli.jpg');
+
+    $productData = [
         'id' => (string) Str::uuid(),
         'is_active' => true,
         'name' => 'Brocoli',
         'price' =>  3.35,
         'description' => 'Susp endisse ultricies nisi vel quam suscipit. Sabertooth peacock flounder; chain pickerel hatchetfish.',
-        'image' => 'brocoli.jpg',
+        'image' => $image,
         'weight' => 1,
         'min_weight' => 250,
         'country_origin' => 'Brazil',
         'quality' => 'Organic',
         'check' => 'Healthy',
+        'category_id' => $category->id,
     ];
 
-    $category = Category::create($category);
-    $product['category_id'] = $category->id;
-    $product = Product::create($product);
+    $response = post(route('product.store'), $productData);
+    $response->assertStatus(302);
+    $response->assertRedirect(route('product.index'));
 
-    expect($product)->toBeInstanceOf(Product::class);
-    expect($product->category)->toBeInstanceOf(Category::class);
-    expect($product->category->name)->toBe('Vegetables');
-    expect($product->name)->toBe('Brocoli');
+    $createProduct = Product::where('name', 'Brocoli')->first();
+
+    expect($createProduct)->toBeInstanceOf(Product::class);
+    expect($createProduct->category)->toBeInstanceOf(Category::class);
+    expect($createProduct->name)->toBe('Brocoli');
+    expect($createProduct->image)->not->toBeNull();
+    expect($createProduct->image)->toBeString();
 });
 
 it('displays the show product page', function(){
