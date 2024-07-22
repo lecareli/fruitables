@@ -48,4 +48,16 @@ class CategoryController extends Controller
             return redirect()->route()->with('error', 'Não foi possível encontrar a categoria.');
         }
     }
+
+    public function edit(string $id)
+    {
+        try{
+            return view('dashboard.register.categories.edit', [
+                'category' => $this->category->findOrFail($id),
+            ]);
+        }
+        catch(ModelNotFoundException $e){
+            return redirect()->route()->with('error', 'Não foi possível encontrar a categoria.');
+        }
+    }
 }

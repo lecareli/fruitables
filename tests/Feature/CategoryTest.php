@@ -44,3 +44,12 @@ it('displays the show category page', function(){
     $response->assertSee($category->is_active);
     $response->assertSee($category->name);
 });
+
+it('displays the edit category page', function(){
+    $category = Category::factory()->create();
+
+    $response = get(route('category.edit', $category->id));
+    $response->assertStatus(200);
+    $response->assertSee($category->is_active);
+    $response->assertSee($category->name);
+});
