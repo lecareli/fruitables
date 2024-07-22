@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Category;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
 
@@ -33,4 +34,13 @@ it('can create a category successfully', function(){
         ->assertSessionHas('message', 'Categoria incluída com sucesso.');
 
     assertDatabaseHas('categories', ['name' => 'Fruits']);
+});
+
+it('displays the show category page', function(){
+    $category = Category::factory()->create();
+
+    $response = get(route('category.show', $category->id));
+    $response->assertStatus(200);
+    $response->assertSee($category->is_active);
+    $response->assertSee($category->name);
 });

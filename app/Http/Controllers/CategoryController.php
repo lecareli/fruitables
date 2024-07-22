@@ -36,4 +36,16 @@ class CategoryController extends Controller
             return redirect()->route()->with('error', 'Não foi possível incluir a categoria.');
         }
     }
+
+    public function show(string $id)
+    {
+        try{
+            return view('dashboard.register.categories.show', [
+                'category' => $this->category->findOrFail($id),
+            ]);
+        }
+        catch(ModelNotFoundException $e){
+            return redirect()->route()->with('error', 'Não foi possível encontrar a categoria.');
+        }
+    }
 }
