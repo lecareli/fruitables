@@ -7,6 +7,7 @@ use Illuminate\Support\Str;
 use function Pest\Laravel\assertDatabaseHas;
 use function Pest\Laravel\get;
 use function Pest\Laravel\post;
+use function Pest\Laravel\put;
 
 uses(RefreshDatabase::class);
 
@@ -52,4 +53,19 @@ it('displays the edit category page', function(){
     $response->assertStatus(200);
     $response->assertSee($category->is_active);
     $response->assertSee($category->name);
+});
+
+it('update a category successfully', function(){
+    $category = Category::factory()->create();
+
+    $updateCategory = [
+        'is_active' => true,
+        'name' => 'Fruits',
+    ];
+
+    $response = put(route('category.update', $category->id), $updateCategory);
+    $response->assertRedirect(route('category.index'));
+    $response->assertSessionHas('message', 'Categoria atualizada com sucesso.');
+
+    assertDatabaseHas('categories', ['name' => 'Fruits']);
 });

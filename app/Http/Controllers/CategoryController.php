@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Category\StoreCategoryRequest;
+use App\Http\Requests\Category\UpdateCategoryRequest;
 use App\Models\Category;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
@@ -58,6 +59,22 @@ class CategoryController extends Controller
         }
         catch(ModelNotFoundException $e){
             return redirect()->route()->with('error', 'Não foi possível encontrar a categoria.');
+        }
+    }
+
+    public function update(string $id, UpdateCategoryRequest $updateCategoryRequest)
+    {
+        try{
+            $category = $this->category->findOrFail($id);
+            $category->update($updateCategoryRequest->validated());
+
+            return redirect()->route('category.index')->with('message', 'Categoria atualizada com sucesso.');
+        }
+        catch(ModelNotFoundException $e){
+            return redirect()->route()->with('error', 'Não foi possível encontrar a categoria.');
+        }
+        catch(\Exception $e){
+            return redirect()->route('category.index')->with('error', 'Não foi possível concluir a atualização da categoria.');
         }
     }
 }
